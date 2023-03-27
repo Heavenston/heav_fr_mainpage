@@ -1,0 +1,48 @@
+name: Public
+on: [push]
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    permissions: write-all
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup | Rust
+        uses: ATiltedTree/setup-rust@v1
+        with:
+          rust-version: nightly
+
+      - name: Setup | Add wasm
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Setup | Install trunk
+        uses: jetli/trunk-action@v0.4.0
+        with:
+          version: 'latest'
+
+      - name: Cache | Restore cached target folder
+        id: restore-cache
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: compiled-target-${{ runner.os }}-${{ github.run_id }}-${{ github.run_number }}
+          restore-keys: |
+            compiled-target-${{ runner.os }}
+
+      - name: Build | Run trunk
+        run: trunk build --release
+
+      - name: Cache | Cache target folder
+        uses: actions/cache/save@v3
+        with:
+          path: target
+          key: compiled-target-${{ runner.os }}-${{ github.run_id }}-${{ github.run_number }}
+
+      - name: Deploy | Firebase
+        uses: sws2apps/firebase-deployment@main
+        with:
+          workloadIdentityProvider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          serviceAccount: ${{ secrets.SERVICE_ACCOUNT }}
+          project: heav-fr
+          hosting: true
