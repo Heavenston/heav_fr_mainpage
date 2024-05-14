@@ -8,10 +8,9 @@ jobs:
       - name: Setup | Checkout
         uses: actions/checkout@v3
 
-      - name: Setup | Rust
-        uses: ATiltedTree/setup-rust@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          rust-version: nightly
+          toolchain: nightly
 
       - name: Setup | Add wasm
         run: rustup target add wasm32-unknown-unknown
