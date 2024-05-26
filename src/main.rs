@@ -10,6 +10,7 @@ fn App() -> impl IntoView {
                     <li><a href="https://github.com/Heavenston/heav_fr_mainpage">GitHub</a></li>
                     <li><a href="https://hfax.fr">Heav-Faxer</a></li>
                     <li><a href="https://isabellemaire.fr">isabellemaire.fr</a></li>
+                    <li><a href="https://adhd.heav.fr">ADHD</a></li>
                 </ul>
             </div>
         </div>
